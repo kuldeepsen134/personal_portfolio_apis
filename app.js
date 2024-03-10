@@ -12,7 +12,7 @@ const { PORT } = require('./app/config/config');
 
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://192.168.0.23:3000'],
+    origin: ['http://localhost:3000', 'http://192.168.0.23:3000','https://main--kuldeepsen.netlify.app/'],
     credentials: true,
     methods: ['POST', 'PUT', 'GET', 'DELETE'],
     preflightContinue: false,
