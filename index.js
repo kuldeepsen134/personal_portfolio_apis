@@ -40,6 +40,7 @@ require('./app/router/blog')(app);
 require('./app/router/gallery')(app);
 
 
+
 app.get('*', (req, res) => handleError('Hunnn smart!', 400, res,));
 
 
