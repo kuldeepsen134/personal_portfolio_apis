@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express();
+const path = require('path');
 
 require('dotenv').config();
 
@@ -7,41 +8,46 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 
 
-const { PORT } = require('./app/config/config');
+const { PORT } = require('./src/config/config');
 
 
+const buildPath = path.join(__dirname, './client/build')
+
+app.use(express.static(buildPath))
+
+
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://192.168.0.23:3000','https://main--kuldeepsen.netlify.app/'],
+    origin: ['http://localhost:3000', 'http://192.168.0.23:3000'],
     credentials: true,
-    methods: ['POST', 'PUT', 'GET', 'DELETE'],
+    methods: ['POST', 'PUT','PATCH', 'GET', 'DELETE'],
     preflightContinue: false,
     optionsSuccessStatus:204
   }));
-  
 
 
 
-app.use(bodyParser.json())
+require('./src/router/user')(app);
+require('./src/router/auth')(app);
+require('./src/router/media')(app);
+require('./src/router/project')(app);
+require('./src/router/experience')(app);
 
-const { authJWT } = require('./app/middleware/auth');
-const { handleError } = require('./app/utils/helper');
-// app.use(authJWT);
-
-
-require('./app/router/user')(app);
-require('./app/router/auth')(app);
-require('./app/router/media')(app);
-require('./app/router/project')(app);
-require('./app/router/experience')(app);
-
-require('./app/router/skill')(app);
-require('./app/router/blog')(app);
-require('./app/router/gallery')(app);
+require('./src/router/skill')(app);
+require('./src/router/blog')(app);
+require('./src/router/gallery')(app);
 
 
-
-app.get('*', (req, res) => handleError('Hunnn smart!', 400, res,));
+// gets the static files from the build folder
+app.get('*', (req, res) => {
+  // res.sendFile(path.join(buildPath, 'index.html'))
+  res.send({
+    message:'welcone'
+  })
+})
 
 
 
