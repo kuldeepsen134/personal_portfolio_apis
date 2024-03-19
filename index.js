@@ -36,6 +36,8 @@ require('./src/router/experience')(app);
 require('./src/router/skill')(app);
 require('./src/router/blog')(app);
 require('./src/router/gallery')(app);
+require('./src/router/contactUs')(app);
+
 
 
 // gets the static files from the build folder

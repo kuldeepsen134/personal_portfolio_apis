@@ -6,6 +6,8 @@ module.exports = {
   blogs: require('./blog'),
   galleries: require('./gallery'),
   experiences: require('./experience'),
+  contactUs: require('./contactUs'),
+
 
 
 };
