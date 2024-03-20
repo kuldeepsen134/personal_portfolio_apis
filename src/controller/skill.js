@@ -46,3 +46,17 @@ exports.find = async (req, res) => {
         handleError(error.message, 400, res);
     }
 };
+
+
+
+exports.findOne = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const skill = await Skill.findOne({ _id: id });
+
+        handleResponse(res, skill._doc, 200);
+
+    } catch (error) {
+        handleError(error.message, 400, res);
+    }
+};

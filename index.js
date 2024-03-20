@@ -32,6 +32,8 @@ require('./src/router/auth')(app);
 require('./src/router/media')(app);
 require('./src/router/project')(app);
 require('./src/router/experience')(app);
+require('./src/router/education')(app);
+
 
 require('./src/router/skill')(app);
 require('./src/router/blog')(app);

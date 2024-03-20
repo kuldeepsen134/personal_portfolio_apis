@@ -8,6 +8,8 @@ module.exports = (app) => {
 
   router.post("/skills", fileUploader, skills.create);
   router.get("/skills", skills.find);
+  
+  router.get("/skills/:id", skills.findOne);
 
 
 

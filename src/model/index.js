@@ -9,6 +9,8 @@ const db = {
     Blog:require('./blog'),
     Gallery:require('./gallery'),
     Experience:require('./experience'),
+    Education:require('./education'),
+
     Skill:require('./skill'),
     ContactUs:require('./contactUs'),
 }
