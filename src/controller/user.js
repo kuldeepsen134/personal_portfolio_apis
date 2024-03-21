@@ -90,7 +90,7 @@ exports.updateProfile = async (req, res) => {
     const file = `/media/${req?.file?.filename}`;
 
     const data = { full_name, title, aboutUs, mobile, email, password, profile: file, };
-    console.log('data>>>>>>>>>', data);
+  
     await User.findOneAndUpdate({ _id: req.user._id }, data, { new: true })
 
     handleResponse(res, [], "Profile updated here.", 202);

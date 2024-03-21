@@ -1,5 +1,5 @@
 const { ContactUs } = require("../model");
-const { handleResponse, handleError } = require("../utils/helper");
+const { handleResponse, handleError, getPagination } = require("../utils/helper");
 
 exports.create = async (req, res) => {
     try {
@@ -18,3 +18,44 @@ exports.create = async (req, res) => {
         handleError(error.message, 400, res);
     }
 };
+
+
+
+
+exports.find = async (req, res) => {
+    try {
+        const { role, q } = req.query;
+        const searchFilter = q
+            ? {
+                $or: [
+                    { full_name: { $regex: new RegExp(q, "i") } },
+                    { email: { $regex: new RegExp(q, "i") } },
+                ],
+            }
+            : {};
+
+        const contacts = await ContactUs.find({ ...searchFilter });
+        const totalCount = await ContactUs.countDocuments();
+
+        const getPaginationResult = await getPagination(req.query, contacts, totalCount);
+
+        handleResponse(res, getPaginationResult, 200);
+
+    } catch (error) {
+        handleError(error.message, 400, res);
+    }
+};
+
+
+
+// exports.findOne = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const conta = await ContactUs.findOne({ _id: id });
+
+//         handleResponse(res, conta._doc, 200);
+
+//     } catch (error) {
+//         handleError(error.message, 400, res);
+//     }
+// };

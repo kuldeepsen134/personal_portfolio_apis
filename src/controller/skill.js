@@ -60,3 +60,33 @@ exports.findOne = async (req, res) => {
         handleError(error.message, 400, res);
     }
 };
+
+exports.update = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, totalExp } = req.body;
+        const file = `/media/${req?.file?.filename}`;
+
+        const data = { title, totalExp, techLogo: file };
+
+        const result = await Skill.findOneAndUpdate({ _id: id }, data, { new: true })
+        handleResponse(res, result._doc, 'Skill has been successfully updated.', 200);
+
+    } catch (error) {
+
+        handleError(error.message, 400, res);
+    }
+};
+
+
+exports.delete = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await Skill.findOneAndDelete({ _id: id })
+        handleResponse(res, result._doc, 'Skill has been successfully deleted.', 200);
+
+    } catch (error) {
+
+        handleError(error.message, 400, res);
+    }
+};
