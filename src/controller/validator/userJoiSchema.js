@@ -7,6 +7,10 @@ const registerUser = Joi.object().keys({
     mobile: Joi.string().min(10).max(13),
     title: Joi.string(),
     aboutUs: Joi.string(),
+    address: Joi.string(),
+    city: Joi.string(),
+    state: Joi.string(),
+    totalExp: Joi.number().required(),
 
 })
 
@@ -24,6 +28,11 @@ const updateUserProfile = Joi.object().keys({
     mobile: Joi.string().min(10).max(13),
     title: Joi.string(),
     aboutUs: Joi.string(),
+    address: Joi.string(),
+    city: Joi.string(),
+    state: Joi.string(),
+    totalExp: Joi.string(),
+
 })
 
 

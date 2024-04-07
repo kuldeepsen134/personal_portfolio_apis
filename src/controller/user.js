@@ -9,7 +9,7 @@ const { registerUser, updateUser, updateUserProfile, } = require("./validator/us
 // User can sign-up
 exports.create = async (req, res) => {
   try {
-    const { full_name, title, mobile, email, password, aboutUs } = req.body;
+    const { full_name, title, mobile, email, password, aboutUs, totalExp } = req.body;
     const { error } = registerUser.validate(req.body, { abortEarly: false });
 
     if (error) {
@@ -19,7 +19,7 @@ exports.create = async (req, res) => {
 
     const file = `/media/${req?.file?.filename}`;
 
-    const data = { full_name, title, aboutUs, mobile, email, password, profile: file, };
+    const data = { full_name, title, aboutUs, mobile, email, password, profile: file, totalExp };
 
     const token = jwt.sign({ data }, JWT_SECREATE, { expiresIn: JWT_EXPIRESIN, });
 
@@ -86,11 +86,16 @@ exports.findOne = async (req, res) => {
 // For admin only
 exports.updateProfile = async (req, res) => {
   try {
-    const { full_name, title, mobile, email, password, aboutUs } = req.body;
+    const { full_name, title, mobile, email, password, aboutUs, address, city, state, totalExp } = req.body;
     const file = `/media/${req?.file?.filename}`;
+    let data = ''
+    if (req?.file) {
+      data = { full_name, title, aboutUs, mobile, email, password, profile: file, address, city, state, totalExp }
+    }
+    else {
+      data = { full_name, title, aboutUs, mobile, email, password, address, city, state, totalExp };
+    }
 
-    const data = { full_name, title, aboutUs, mobile, email, password, profile: file, };
-  
     await User.findOneAndUpdate({ _id: req.user._id }, data, { new: true })
 
     handleResponse(res, [], "Profile updated here.", 202);

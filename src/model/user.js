@@ -23,24 +23,33 @@ const userSchema = Schema(
       type: String,
       required: true,
     },
-
+    totalExp: {
+      type: Number,
+      required: true,
+    },
     mobile: {
       type: String,
       required: true,
     },
-
     email: {
       type: String,
       required: true,
       unique: true,
     },
-
     password: {
       type: String,
       minlength: [8, "Must be at least 8 characters password"],
       required: true,
     },
-
+    address: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
     token: {
       type: String,
     },
