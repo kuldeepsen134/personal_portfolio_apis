@@ -6,6 +6,7 @@ const { JWT_EXPIRESIN, JWT_SECREATE } = require("../config/config");
 const { handleError, handleResponse, getPagination, } = require("../utils/helper");
 const { registerUser, updateUser, updateUserProfile, } = require("./validator/userJoiSchema");
 
+const { uploadOnCloudinary } = require("../utils/cloudinary");
 // User can sign-up
 exports.create = async (req, res) => {
   try {
@@ -17,9 +18,10 @@ exports.create = async (req, res) => {
       return;
     }
 
-    const file = `/media/${req?.file?.filename}`;
+    const localFilePath = req?.file?.path
+    const filePath = await uploadOnCloudinary(localFilePath)
 
-    const data = { full_name, title, aboutUs, mobile, email, password, profile: file, totalExp };
+    const data = { full_name, title, aboutUs, mobile, email, password, profile: filePath?.url, totalExp };
 
     const token = jwt.sign({ data }, JWT_SECREATE, { expiresIn: JWT_EXPIRESIN, });
 
@@ -87,10 +89,13 @@ exports.findOne = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const { full_name, title, mobile, email, password, aboutUs, address, city, state, totalExp } = req.body;
-    const file = `/media/${req?.file?.filename}`;
     let data = ''
+
     if (req?.file) {
-      data = { full_name, title, aboutUs, mobile, email, password, profile: file, address, city, state, totalExp }
+      const localFilePath = req?.file?.path
+      const filePath = await uploadOnCloudinary(localFilePath)
+      data = { full_name, title, aboutUs, mobile, email, password, profile: filePath?.url, address, city, state, totalExp }
+
     }
     else {
       data = { full_name, title, aboutUs, mobile, email, password, address, city, state, totalExp };
@@ -99,7 +104,6 @@ exports.updateProfile = async (req, res) => {
     await User.findOneAndUpdate({ _id: req.user._id }, data, { new: true })
 
     handleResponse(res, [], "Profile updated here.", 202);
-
   } catch (error) {
     handleError(error, 400, res);
   }

@@ -72,6 +72,6 @@ exports.multipleFileUploading = async (req, res, next) => {
       fileFilter: fileFilter
   })
 
-  upload.fields([{ name: 'image', maxCount: 5 }, { name: 'video', maxCount: 1 },])(req, res, next)
+  upload.fields([{ name: 'image', maxCount: 5 }, { name: 'video', maxCount: 2 },])(req, res, next)
 
 }

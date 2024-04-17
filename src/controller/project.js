@@ -1,17 +1,20 @@
 const { Project } = require("../model");
+const { uploadOnCloudinaryArray } = require("../utils/cloudinary");
 const { handleError, handleResponse, getPagination } = require("../utils/helper");
 
 exports.create = async (req, res) => {
   try {
+
     const { title, short_desc, description, github, liveURL } = req.body;
 
-    const files = req.files;
+    // const localVideoFilePath = req?.files?.video?.map((file) => file?.path);
+    // const videos = await uploadOnCloudinaryArray(localVideoFilePath);
+    // const videoUrls = videos?.map((video) => video.url)
+    const localFilePath = req?.files?.image?.map((file) => file?.path);
+    const images = await uploadOnCloudinaryArray(localFilePath);
+    const imageUrl = images.map((image) => image.url)
 
-    const video = files?.video?.map((file) => `/media/${file?.filename}`);
-
-    const photoes = files?.image?.map((file) => `/media/${file?.filename}`);
-
-    const data = { title, short_desc, description, github, liveURL, photoes, video, };
+    const data = { title, short_desc, description, github, liveURL, photoes: imageUrl, };
 
     const newProject = new Project(data);
 
@@ -83,7 +86,6 @@ exports.deleteOne = async (req, res) => {
 };
 
 
-
 // For admin only
 exports.updateOne = async (req, res) => {
   try {
@@ -91,15 +93,13 @@ exports.updateOne = async (req, res) => {
 
     const { title, short_desc, description, github, liveURL } = req.body;
 
-    const files = req.files;
+    // const video = files?.video?.map((file) => `/media/${file?.filename}`);
 
-    const video = files?.video?.map((file) => `/media/${file?.filename}`);
+    const localFilePath = req?.files?.image?.map((file) => file?.path);
+    const images = await uploadOnCloudinaryArray(localFilePath);
+    const imageUrl = images?.map((image) => image?.url)
 
-    const photoes = files?.image?.map((file) => `/media/${file?.filename}`);
-
-    const data = { title, short_desc, description, github, liveURL, photoes, video, };
-
-
+    const data = { title, short_desc, description, github, liveURL, photoes: imageUrl, };
 
     const project = await Project.findAndUpdateOne({ _id: id }, data, { new: true });
 
