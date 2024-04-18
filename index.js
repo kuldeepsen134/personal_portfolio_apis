@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://192.168.0.23:3000', 'https://kuldeepsen.onrender.com', 'https://kuldeepsen.netlify.app', 'https://verbose-couscous-pq4r5pxv6r9hr49-3000.app.github.dev/'],
+  origin: ['http://localhost:3000', 'http://192.168.0.23:3000', 'https://kuldeepsen.onrender.com', 'https://kuldeepsen.netlify.app', 'https://verbose-couscous-pq4r5pxv6r9hr49-3000.app.github.dev'],
   credentials: true,
   methods: ['POST', 'PUT', 'PATCH', 'GET', 'DELETE'],
   preflightContinue: false,
