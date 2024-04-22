@@ -7,17 +7,15 @@ const EducationSchema = Schema(
       type: String,
       required: true,
     },
-
     institute: {
       type: String,
       required: true,
     },
-
-    startDate: {
-      type: Date,
+    passingYear: {
+      type: String,
     },
-    endDate: {
-      type: Date,
+    grade: {
+      type: String,
     },
     description: {
       type: String,

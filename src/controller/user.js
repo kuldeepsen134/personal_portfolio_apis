@@ -6,7 +6,13 @@ const { JWT_EXPIRESIN, JWT_SECREATE } = require("../config/config");
 const { handleError, handleResponse, getPagination, } = require("../utils/helper");
 const { registerUser, updateUser, updateUserProfile, } = require("./validator/userJoiSchema");
 
-const { uploadOnCloudinary } = require("../utils/cloudinary");
+const fs = require('fs');
+const path = require("path");
+const BASE_PATH = path.join(__dirname, "../upload");
+
+
+
+
 // User can sign-up
 exports.create = async (req, res) => {
   try {
@@ -18,10 +24,9 @@ exports.create = async (req, res) => {
       return;
     }
 
-    const localFilePath = req?.file?.path
-    const filePath = await uploadOnCloudinary(localFilePath)
+    const file = `/media/${req?.file?.filename}`;
 
-    const data = { full_name, title, aboutUs, mobile, email, password, profile: filePath?.url, totalExp };
+    const data = { full_name, title, aboutUs, mobile, email, password, profile: file, totalExp };
 
     const token = jwt.sign({ data }, JWT_SECREATE, { expiresIn: JWT_EXPIRESIN, });
 
@@ -91,11 +96,26 @@ exports.updateProfile = async (req, res) => {
     const { full_name, title, mobile, email, password, aboutUs, address, city, state, totalExp } = req.body;
     let data = ''
 
-    if (req?.file) {
+    const user = await User.findOne({ _id: req.user._id });
 
-      const localFilePath = req?.file?.path
-      const filePath = await uploadOnCloudinary(localFilePath)
-      data = { full_name, title, aboutUs, mobile, email, password, profile: filePath?.url, address, city, state, totalExp }
+    if (!user) {
+      handleError('Invalid user Id', 400, res);
+      return;
+    };
+
+    if (req?.file) {
+      
+      const file = `/media/${req?.file?.filename}`;
+      data = { full_name, title, aboutUs, mobile, email, password, profile: file, address, city, state, totalExp }
+      
+      const filePath = user?.profile?.split('/')[2]
+
+
+      if (fs.existsSync(`${BASE_PATH}/${filePath}`)) {
+        fs.unlinkSync(`${BASE_PATH}/${filePath}`);
+      } else {
+        console.error('File does not exist:', `${BASE_PATH}/${filePath}`);
+      }
 
     }
     else {

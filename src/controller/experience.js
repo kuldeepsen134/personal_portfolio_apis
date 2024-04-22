@@ -4,12 +4,10 @@ const { handleResponse, handleError, getPagination } = require("../utils/helper"
 exports.create = async (req, res) => {
   try {
     const { title, companyName, description, joiningDate, leaveDate } = req.body;
-
-
+    
     const data = { title, companyName, description, joiningDate, leaveDate };
 
     const newExperience = new Experience(data);
-
     await newExperience.save();
 
     handleResponse(res, newExperience._doc, 201);
@@ -17,6 +15,7 @@ exports.create = async (req, res) => {
     handleError(error.message, 400, res);
   }
 };
+
 
 exports.find = async (req, res) => {
   try {
@@ -71,6 +70,7 @@ exports.update = async (req, res) => {
     handleError(error.message, 400, res);
   }
 };
+
 
 exports.delete = async (req, res) => {
   try {

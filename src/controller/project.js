@@ -1,20 +1,19 @@
 const { Project } = require("../model");
-const { uploadOnCloudinaryArray } = require("../utils/cloudinary");
 const { handleError, handleResponse, getPagination } = require("../utils/helper");
+
+const fs = require('fs');
+const path = require("path");
+const BASE_PATH = path.join(__dirname, "../upload");
+
 
 exports.create = async (req, res) => {
   try {
 
     const { title, short_desc, description, github, liveURL } = req.body;
 
-    // const localVideoFilePath = req?.files?.video?.map((file) => file?.path);
-    // const videos = await uploadOnCloudinaryArray(localVideoFilePath);
-    // const videoUrls = videos?.map((video) => video.url)
-    const localFilePath = req?.files?.image?.map((file) => file?.path);
-    const images = await uploadOnCloudinaryArray(localFilePath);
-    const imageUrl = images.map((image) => image.url)
+    const media = req?.files?.map((file) => `/media/${file?.filename}`);
 
-    const data = { title, short_desc, description, github, liveURL, photoes: imageUrl, };
+    const data = { title, short_desc, description, github, liveURL, media };
 
     const newProject = new Project(data);
 
@@ -52,6 +51,7 @@ exports.find = async (req, res) => {
   }
 };
 
+
 exports.findOne = async (req, res) => {
   try {
     const { id } = req.params
@@ -64,27 +64,34 @@ exports.findOne = async (req, res) => {
   }
 };
 
-
-
 // For admin only
 exports.deleteOne = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findOne({ _id: id });
+    
+    const projectData = await Project.findOne({ _id: id });
 
-    if (!project) {
-      handleError('Invailid project ID', 400, res)
-      return
-    }
+    if (!projectData) {
+      return handleError('Invalid project id', 400, res)
+    };
 
-    await Project.deleteOne({ _id: project._id })
+      for (let i = 0; i < projectData?.media?.length; i++) {
+        const fileURL = projectData?.media[i];
+        const filePath = fileURL.split('/')[2]
 
+        if (fs.existsSync(`${BASE_PATH}/${filePath}`)) {
+          fs.unlinkSync(`${BASE_PATH}/${filePath}`);
+        } else {
+          console.error('File does not exist:', `${BASE_PATH}/${filePath}`);
+        }
+      };
+
+    await Project.deleteOne({ _id: projectData._id });
     handleResponse(res, [], 'Project deleted successfully', 200);
   } catch (error) {
     handleError(error.message, 400, res);
   }
 };
-
 
 // For admin only
 exports.updateOne = async (req, res) => {
@@ -93,15 +100,31 @@ exports.updateOne = async (req, res) => {
 
     const { title, short_desc, description, github, liveURL } = req.body;
 
-    // const video = files?.video?.map((file) => `/media/${file?.filename}`);
 
-    const localFilePath = req?.files?.image?.map((file) => file?.path);
-    const images = await uploadOnCloudinaryArray(localFilePath);
-    const imageUrl = images?.map((image) => image?.url)
+    const projectData = await Project.findOne({ _id: id });
 
-    const data = { title, short_desc, description, github, liveURL, photoes: imageUrl, };
+    if (!projectData) {
+      return handleError('Invalid project id', 400, res)
+    };
 
-    const project = await Project.findAndUpdateOne({ _id: id }, data, { new: true });
+    const media = req?.files?.map((file) => `/media/${file?.filename}`);
+
+    if (req?.files) {
+      for (let i = 0; i < projectData.media.length; i++) {
+        const fileURL = projectData.media[i];
+        const filePath = fileURL.split('/')[2]
+
+        if (fs.existsSync(`${BASE_PATH}/${filePath}`)) {
+          fs.unlinkSync(`${BASE_PATH}/${filePath}`);
+        } else {
+          console.error('File does not exist:', `${BASE_PATH}/${filePath}`);
+        }
+      }
+    }
+
+    const data = { title, short_desc, description, github, liveURL, media: media, };
+
+    const project = await Project.findOneAndUpdate({ _id: id }, data, { new: true });
 
     if (!project) {
       handleError('Invailid project ID', 400, res)

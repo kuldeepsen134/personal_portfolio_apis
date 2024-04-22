@@ -20,8 +20,6 @@ exports.create = async (req, res) => {
 };
 
 
-
-
 exports.find = async (req, res) => {
     try {
         const { role, q } = req.query;
@@ -45,17 +43,3 @@ exports.find = async (req, res) => {
         handleError(error.message, 400, res);
     }
 };
-
-
-
-// exports.findOne = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const conta = await ContactUs.findOne({ _id: id });
-
-//         handleResponse(res, conta._doc, 200);
-
-//     } catch (error) {
-//         handleError(error.message, 400, res);
-//     }
-// };

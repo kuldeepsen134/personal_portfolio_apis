@@ -36,10 +36,10 @@ exports.uploadOnCloudinaryArray = async (localFilePaths) => {
             const response = await cloudinary.uploader.upload(path, {
                 resource_type: "auto"
             });
+
             uploadedFiles.push(response);
             fs.unlinkSync(path);
-        }
-        
+        };
         return uploadedFiles;
     } catch (error) {
         // Handle error and cleanup

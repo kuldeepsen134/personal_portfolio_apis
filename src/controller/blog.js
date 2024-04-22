@@ -23,6 +23,7 @@ exports.create = async (req, res) => {
     }
   };
   
+  
   exports.find = async (req, res) => {
     try {
       const { role, q } = req.query;

@@ -12,6 +12,5 @@ module.exports = (app) => {
   router.patch("/skills/:id", fileUploader, skills.update);
   router.delete("/skills/:id",  skills.delete);
 
-
   app.use("/api", router);
 };

@@ -18,13 +18,8 @@ const ProjectSchema = Schema(
       required: true,
     },
 
-    photoes: {
+    media: {
       type: [String], // Define photoes as an array of strings
-      required: true,
-    },
-
-    video: {
-      type: [String], 
       required: true,
     },
 

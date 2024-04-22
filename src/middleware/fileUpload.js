@@ -15,14 +15,12 @@ exports.fileUploader = (req, res, next) => {
     storage: storage,
   });
 
-
   upload.single("pic")(req, res, next);
 };
 
 
 
 exports.multipleFileUploading = async (req, res, next) => {
-
   const BASE_PATH = __dirname
   const storage = multer.diskStorage({
 
@@ -37,11 +35,27 @@ exports.multipleFileUploading = async (req, res, next) => {
       cb(null, Date.now() + myFile)
     },
   })
+  const imageFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+  };
 
-  const upload = multer({
+  multer({
     storage: storage,
-  })
+    fileFilter: imageFilter
 
-  upload.fields([{ name: 'image', maxCount: 5 }, { name: 'video', maxCount: 2 },])(req, res, next)
-
-}
+  }).array('media')(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+      return res.status(400).json({ error: "Multer Error: " + err.message });
+    } else if (err) {
+      // An unknown error occurred.
+      return res.status(500).json({ error: "Unknown Error: " + err.message });
+    }
+    // Everything went fine, proceed to the next middleware.
+    next();
+  });
+};

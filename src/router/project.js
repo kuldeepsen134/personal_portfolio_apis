@@ -9,10 +9,7 @@ module.exports = app => {
     router.delete('/projects/:id', projects.deleteOne)
     router.get('/projects/:id', projects.findOne)
 
-    // router.patch('/projects/:id', projects.updateOne)
-
-
-
+    router.patch('/projects/:id', multipleFileUploading, projects.updateOne)
 
     app.use('/api', router);
 }

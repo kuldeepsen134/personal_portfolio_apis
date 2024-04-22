@@ -3,20 +3,18 @@ const { handleResponse, handleError, getPagination } = require("../utils/helper"
 
 exports.create = async (req, res) => {
   try {
-    const { program, institute, description, startDate, endDate } = req.body;
+    const { program, institute, description, passingYear, grade, endDate } = req.body;
 
-
-    const data = { program, institute, description, startDate, endDate };
+    const data = { program, institute, description, passingYear, grade };
 
     const newEducation = new Education(data);
-
     await newEducation.save();
-
     handleResponse(res, newEducation._doc, 201);
   } catch (error) {
     handleError(error.message, 400, res);
   }
 };
+
 
 exports.find = async (req, res) => {
   try {
@@ -44,8 +42,6 @@ exports.find = async (req, res) => {
 };
 
 
-
-
 exports.findOne = async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,9 +59,9 @@ exports.update = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { program, institute, description, startDate, endDate } = req.body;
+    const { program, institute, description, passingYear, grade } = req.body;
 
-    const data = { program, institute, description, startDate, endDate };
+    const data = { program, institute, description, passingYear, grade };
 
     const result = await Education.findOneAndUpdate({ _id: id }, data, { new: true })
     handleResponse(res, result._doc, 'Education has been successfully updated.', 200);
@@ -73,6 +69,7 @@ exports.update = async (req, res) => {
     handleError(error.message, 400, res);
   }
 };
+
 
 exports.delete = async (req, res) => {
   try {
