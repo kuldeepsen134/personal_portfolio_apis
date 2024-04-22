@@ -1,7 +1,5 @@
 const express = require('express')
 const app = express();
-// const path = require('path');
-
 require('dotenv').config();
 
 const cors = require('cors')
@@ -9,16 +7,12 @@ const bodyParser = require('body-parser');
 
 const { PORT } = require('./src/config/config');
 
-// const buildPath = path.join(__dirname, './client/build')
-// app.use(express.static(buildPath))
-
-
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://192.168.0.23:3000', 'https://kuldeepsen.onrender.com', 'https://kuldeepsen.netlify.app', 'https://supreme-couscous-94r9gjpv4wwhw67-3000.app.github.dev'],
+  origin: ['http://localhost:3000', 'http://192.168.0.23:3000', 'https://kuldeepsen.onrender.com', 'https://kuldeepsen.netlify.app', 'https://'],
   credentials: true,
   methods: ['POST', 'PUT', 'PATCH', 'GET', 'DELETE'],
   preflightContinue: false,

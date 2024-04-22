@@ -92,9 +92,9 @@ exports.updateProfile = async (req, res) => {
     let data = ''
 
     if (req?.file) {
+
       const localFilePath = req?.file?.path
       const filePath = await uploadOnCloudinary(localFilePath)
-      console.log('vVVVV', filePath);
       data = { full_name, title, aboutUs, mobile, email, password, profile: filePath?.url, address, city, state, totalExp }
 
     }
